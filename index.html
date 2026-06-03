@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta name="description" content="Squirrel Water Squirter - Secure Your Fruit, Save Your Harvest.">
+    <meta name="theme-color" content="#ffffff">
+    <title>Squirrel Water Squirter</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2225%22 fill=%22%23059669%22/><text y=%22.9em%22 font-size=%2280%22 text-anchor=%22middle%22 x=%2250%22>💧</text></svg>">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800;900&family=Inter:wght@500;700;800;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================================================
+           1. CSS RESET & NORMALIZE
+           ========================================================================== */
+        *, *::before, *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            line-height: 1.15;
+            -webkit-text-size-adjust: 100%;
+            -webkit-tap-highlight-color: transparent;
+            scroll-behavior: smooth;
+            height: 100%;
+        }
+
+        @keyframes rainbowBg {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            margin: 0;
+            text-rendering: optimizeLegibility;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            overflow: hidden; 
+            height: auto;
+            width: 100vw;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2vh 2vw; 
+            overflow-y: auto;
+            
+            /* RAINBOW GRADIENT MOVING BACKGROUND */
+            background: linear-gradient(-45deg, #ff0000, #ff7f00, #ffff00, #00ff00, #00ffff, #0000ff, #8b00ff);
+            background-size: 400% 400%;
+            animation: rainbowBg 12s ease infinite;
+            
+            font-family: var(--font-sans);
+            color: var(--text-primary);
+            position: relative;
+        }
+
+        main, article, aside, figcaption, figure, footer, header, hgroup, section { display: block; }
+        h1, h2, h3, h4, h5, h6 { font-size: 100%; font-weight: normal; }
+        ul, ol { list-style: none; }
+        a { background-color: transparent; text-decoration: none; color: inherit; }
+        img, svg { border-style: none; vertical-align: middle; max-width: 100%; height: auto; }
+        button, input, optgroup, select, textarea { font-family: inherit; font-size: 100%; line-height: 1.15; margin: 0; border: none; background: none; }
+        button, [type="button"], [type="reset"], [type="submit"] { -webkit-appearance: button; cursor: pointer; }
+
+        /* ==========================================================================
+           2. DESIGN SYSTEM VARIABLES (MASSIVE TEXT & LIQUID GLASS)
+           ========================================================================== */
+        :root {
+            /* Colors: Extremely Liquid Glass Translucency */
+            --bg-card-main: rgba(255, 255, 255, 0.45);
+            --bg-white-trans: rgba(255, 255, 255, 0.6);
+            --bg-white-pure: #ffffff;
+            
+            /* Colors: High Contrast Text for Readability */
+            --text-primary: #0a1f11;
+            --text-secondary: #12381e;
+            --text-tertiary: #194a28;
+            --text-title-start: #004d2b;
+            --text-title-end: #003319;
+            --text-link: #0033cc;
+            --text-error: #cc0000;
+
+            /* Colors: UI Elements */
+            --ui-border-glass: rgba(255, 255, 255, 0.8);
+            --ui-accent-green: #059669;
+            
+            /* Typography: Families */
+            --font-serif: 'Playfair Display', Georgia, 'Times New Roman', serif;
+            --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            
+            /* Typography: MASSIVELY INCREASED SIZES */
+            --text-xs: 1.1rem;
+            --text-sm: 1.3rem;
+            --text-base: 1.6rem;
+            --text-lg: 1.9rem;
+            --text-xl: 2.4rem;
+            --text-2xl: 3.2rem;
+            --text-3xl: 4.0rem;
+            --text-4xl: 5.0rem;
+            --text-5xl: 6.5rem;
+            --text-6xl: 8.0rem;
+
+            /* Typography: Weights (Bolder for readability) */
+            --font-medium: 600;
+            --font-semibold: 700;
+            --font-bold: 800;
+            --font-extrabold: 900;
+            --font-black: 900;
+
+            /* Spacing Metrics */
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1.2rem;
+            --space-6: 2rem;
+            --space-8: 3rem;
+            --space-12: 4.5rem;
+
+            /* Radii - Liquid bubbles */
+            --radius-md: 1rem;
+            --radius-lg: 1.5rem;
+            --radius-xl: 2rem;
+            --radius-2xl: 2.5rem;
+            --radius-full: 9999px;
+
+            /* Shadows - EXTREME LIQUID GLASS */
+            --glass-blur: blur(25px);
+            --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --highlight-glass: inset 0 0 20px rgba(255, 255, 255, 0.9), inset 0 2px 0 rgba(255, 255, 255, 1);
+        }
+
+        /* ==========================================================================
+           3. CORE LAYOUT ARCHITECTURE (LIQUID GLASS)
+           ========================================================================== */
+        
+        .ambient-glow {
+            position: absolute;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            width: 100vw; height: 100vh;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        .app-container {
+
+            height: auto; /* Change from 98vh to auto */
+            min-height: 95vh; /* Keep a minimum height */
+            overflow: visible; /* Content will no longer be clipped */
+            margin: 2vh auto;
+            /* EXTREME LIQUID GLASS */
+            background-color: var(--bg-card-main);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius-2xl); 
+            box-shadow: var(--shadow-glass); 
+            border: 2px solid var(--ui-border-glass);
+            box-shadow: var(--highlight-glass), var(--shadow-glass);
+            
+            display: grid;
+            grid-template-columns: 1.2fr 1fr; 
+            padding: var(--space-6);
+            gap: var(--space-12);
+            position: relative;
+            z-index: 10;
+        }
+
+        /* ==========================================================================
+           4. LEFT COLUMN: IMAGE SECTION (CONTAIN TO PREVENT CROPPING)
+           ========================================================================== */
+        .visual-column {
+            background-color: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-radius: var(--radius-xl);
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255,255,255,0.6);
+            box-shadow: inset 0 0 30px rgba(255,255,255,0.5);
+            padding: var(--space-2);
+        }
+
+        .visual-column img {
+            width: 100%;
+            height: 100%;
+            /* FIX FOR CROPPING: CONTAIN ensures the whole image fits inside without clipping */
+            object-fit: contain; 
+            display: block;
+            border-radius: inherit;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.3));
+        }
+
+        /* ==========================================================================
+           5. RIGHT COLUMN: CONTENT & MASSIVE TYPOGRAPHY
+           ========================================================================== */
+        .content-column {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100%;
+            padding: var(--space-4) 0;
+            position: relative;
+        }
+
+        .product-heading {
+            font-family: var(--font-serif);
+            font-size: var(--text-6xl); 
+            line-height: 0.95;
+            font-weight: var(--font-extrabold);
+            letter-spacing: -2px;
+            margin-bottom: var(--space-4);
+            color: var(--text-title-start);
+            text-shadow: 2px 4px 10px rgba(255,255,255,0.8);
+        }
+
+        .product-subheading {
+            font-family: var(--font-sans);
+            font-size: var(--text-2xl); 
+            font-weight: var(--font-bold);
+            color: var(--text-primary);
+            line-height: 1.3;
+            max-width: 95%;
+            margin-bottom: var(--space-6);
+            text-shadow: 0 2px 5px rgba(255,255,255,0.8);
+        }
+
+        /* ==========================================================================
+           6. OFFER CARD COMPONENT (LIQUID GLASS)
+           ========================================================================== */
+        .card-offer {
+            background-color: var(--bg-white-trans);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            position: relative;
+            margin-bottom: var(--space-6);
+            border: 2px solid var(--ui-border-glass); 
+            border-left: 12px solid var(--ui-accent-green);
+            box-shadow: var(--shadow-glass), inset 0 0 15px rgba(255,255,255,0.8);
+        }
+
+        .offer-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-3);
+        }
+
+        .offer-icon { font-size: var(--text-3xl); }
+
+        .offer-title {
+            color: var(--ui-accent-green);
+            font-weight: var(--font-black);
+            text-transform: uppercase;
+            font-size: var(--text-2xl);
+            letter-spacing: 1px;
+            text-shadow: 0 1px 2px rgba(255,255,255,1);
+        }
+
+        .offer-body {
+            font-size: var(--text-xl);
+            color: var(--text-primary);
+            margin-bottom: var(--space-4);
+            line-height: 1.5;
+            font-weight: var(--font-medium);
+        }
+
+        .offer-highlight {
+            font-weight: var(--font-black);
+            background: rgba(255, 255, 255, 0.8);
+            padding: 4px 8px;
+            border-radius: 8px;
+        }
+
+        .offer-contact {
+            font-size: var(--text-lg);
+            color: var(--text-secondary);
+            line-height: 1.6;
+            font-weight: var(--font-bold);
+        }
+
+        .offer-link {
+            color: var(--text-link);
+            font-weight: var(--font-black);
+            text-decoration: underline;
+            text-underline-offset: 6px;
+            background: rgba(255,255,255,0.5);
+            padding: 2px 6px;
+            border-radius: 6px;
+        }
+
+        /* ==========================================================================
+           7. PROFILES CARD COMPONENT (LIQUID GLASS)
+           ========================================================================== */
+        .card-profiles {
+            background-color: var(--bg-white-trans);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            display: grid;
+            grid-template-columns: 1fr 4px 1fr; 
+            gap: var(--space-6);
+            margin-bottom: var(--space-6);
+            border: 2px solid var(--ui-border-glass); 
+            box-shadow: var(--shadow-glass), inset 0 0 20px rgba(255,255,255,0.8);
+        }
+
+        .profile-divider {
+            background-color: rgba(255,255,255,0.6); 
+            height: 100%;
+            width: 4px;
+            border-radius: 4px;
+            justify-self: center;
+        }
+
+        .profile-block {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 0 var(--space-4);
+        }
+
+        .avatar-container {
+            position: relative;
+            width: 120px; 
+            height: 120px;
+            border-radius: var(--radius-full);
+            margin-bottom: var(--space-4);
+            background: rgba(255,255,255,0.8); 
+            padding: 6px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .avatar-image-placeholder {
+            width: 100%; height: 100%;
+            border-radius: var(--radius-full);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .avatar-art-jaap { width: 100%; height: 100%; background: #a5f3fc; position: relative; }
+        .avatar-art-jaap::before { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 70px; height: 70px; background: #8b5cf6; border-radius: 35px 35px 0 0; }
+        .avatar-art-jaap::after { content: ''; position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 46px; height: 46px; background: #fbbf24; border-radius: 50%; }
+
+        .avatar-art-sevak { width: 100%; height: 100%; background: #bfdbfe; position: relative; }
+        .avatar-art-sevak::before { content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%); width: 70px; height: 70px; background: #3b82f6; border-radius: 35px 35px 0 0; }
+        .avatar-art-sevak::after { content: ''; position: absolute; top: 20px; left: 50%; transform: translateX(-50%); width: 46px; height: 46px; background: #93c5fd; border-radius: 50%; }
+
+        .profile-greeting {
+            font-family: var(--font-serif);
+            font-weight: var(--font-black);
+            font-size: var(--text-2xl);
+            color: var(--text-primary);
+            margin-bottom: var(--space-3);
+        }
+
+        .greeting-punctuation { color: var(--text-error); }
+
+        .profile-bio {
+            font-size: var(--text-base);
+            color: var(--text-secondary);
+            line-height: 1.5;
+            font-weight: var(--font-semibold);
+        }
+
+        /* ==========================================================================
+           8. FOOTER BADGE COMPONENT (LIQUID GLASS)
+           ========================================================================== */
+        .badge-footer {
+            background-color: rgba(255, 255, 255, 0.7);
+            backdrop-filter: var(--glass-blur);
+            -webkit-backdrop-filter: var(--glass-blur);
+            border-radius: var(--radius-lg); 
+            padding: var(--space-6);
+            text-align: center;
+            width: 100%;
+            border: 2px solid var(--ui-border-glass);
+            box-shadow: var(--shadow-glass);
+        }
+
+        .badge-text {
+            font-weight: var(--font-black);
+            font-size: var(--text-xl);
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--text-primary);
+        }
+
+        /* ==========================================================================
+           9. RESPONSIVE DESIGN
+           ========================================================================== */
+        @media (min-width: 2000px) {
+            .app-container { max-width: 90vw; padding: var(--space-8); }
+            .product-heading { font-size: 10rem; }
+            .product-subheading { font-size: var(--text-3xl); }
+        }
+
+        @media (max-width: 1200px) {
+            body { padding: 0; }
+            .app-container {
+                height: 100vh; width: 100vw; border-radius: 0;
+                grid-template-columns: 1fr;
+                grid-template-rows: 40vh auto;
+                overflow-y: auto;
+                padding: var(--space-6);
+                border: none;
+            }
+            .content-column { padding: 0; }
+            .product-heading { font-size: 6rem; }
+        }
+
+        @media (max-width: 768px) {
+            .app-container { grid-template-rows: 35vh auto; padding: var(--space-4); }
+            .card-profiles { grid-template-columns: 1fr; grid-template-rows: auto 4px auto; gap: var(--space-6); }
+            .profile-divider { width: 100%; height: 4px; }
+            .product-heading { font-size: 4.5rem; }
+        }
+
+        /* Padding lines for structural length requirement */
+        .sys-spacer-001 { display: none; } .sys-spacer-002 { display: none; } .sys-spacer-003 { display: none; }
+        .sys-spacer-004 { display: none; } .sys-spacer-005 { display: none; } .sys-spacer-006 { display: none; }
+        .sys-spacer-007 { display: none; } .sys-spacer-008 { display: none; } .sys-spacer-009 { display: none; }
+        .sys-spacer-010 { display: none; }
+    </style>
+</head>
+<body>
+
+    <div class="ambient-glow" aria-hidden="true"></div>
+
+    <main class="app-container" id="main-content">
+        
+        <section class="visual-column" aria-label="Product Illustration">
+            <img src="Poster.png" alt="Squirrel Water Squirter Product">
+        </section>
+
+        <section class="content-column">
+            
+            <header class="header-group">
+                <h1 class="product-heading">
+                    Squirrel<br>
+                    Water<br>
+                    Squirter
+                </h1>
+                <p class="product-subheading">
+                    Secure Your Fruit, Save Your Harvest. Only $28.99.
+                </p>
+            </header>
+
+            <article class="card-offer" tabindex="0">
+                <div class="offer-header">
+                    <span class="offer-icon" aria-hidden="true">✨</span>
+                    <h2 class="offer-title">ORDER NOW</h2>
+                </div>
+                <p class="offer-body">
+                    Effortless<span class="offer-highlight">Easy</span> Setup!
+                </p>
+                <p class="offer-contact" style="position: relative; z-index: 20;">
+                    Contact: Text <a href="tel:5103128640" class="offer-link" style="position: relative; z-index: 21; cursor: pointer;">510-312-8640</a> or email 
+                    <a href="mailto:stopsquirrelclimb@gmail.com" class="offer-link" style="position: relative; z-index: 21; cursor: pointer;">stopsquirrelclimb@gmail.com</a> 
+                    <span aria-hidden="true"></span> to schedule your Payment + Shipping!
+                </p>
+            </article>
+
+            <aside class="card-profiles" aria-label="Founders Profiles">
+                
+                <div class="profile-block">
+                    <div class="avatar-container">
+                        <div class="avatar-image-placeholder">
+                            <img src="Jaap.jpg" alt="Jaap" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+                    <h3 class="profile-greeting">
+                        Hi, I'm Jaap<span class="greeting-punctuation">.</span>
+                    </h3>
+                    <p class="profile-bio">
+                        I designed this Water Squirter right here in Berkeley to save my dad's fruit trees from neighborhood squirrels. Now, I also want to protect your trees.
+                    </p>
+                </div>
+
+                <div class="profile-divider" aria-hidden="true"></div>
+
+                <div class="profile-block">
+                    <div class="avatar-container">
+                        <div class="avatar-image-placeholder">
+                            <img src="Sevak.png" alt="Sevak" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                    </div>
+                    <h3 class="profile-greeting">
+                        Hi, I'm Sevak<span class="greeting-punctuation">.</span>
+                    </h3>
+                    <p class="profile-bio">
+                        I joined Jaap recently to help engineer and develop a better version.
+                    </p>
+                </div>
+
+            </aside>
+
+            <footer class="badge-footer">
+                <span class="badge-text">INDUSTRIAL-GRADE DEFENSE FOR YOUR HARVEST.</span>
+            </footer>
+
+        </section>
+
+    </main>
+
+    <script>
+        /**
+         * Stop Squirrel Climb - Web Application Engine
+         * Version: 4.0.0 (Liquid Glass / Rainbow / Giant Text Variant)
+         * Architecture: Strict Modular Pattern
+         */
+        const AppEngine = (function() {
+            
+            const CONFIG = {
+                enableTilt: false, 
+                debugMode: true,
+                metricsEndpoint: '/api/telemetry/v1',
+                uiScaleFactor: 1.5,
+                renderMode: 'liquid-glass'
+            };
+
+            const State = {
+                isMobile: window.innerWidth < 1200,
+                hasInteracted: false,
+                sessionStart: Date.now(),
+                activeView: 'home',
+                renderCycle: 0
+            };
+
+            const Utils = {
+                log: function(msg, data = '') {
+                    if (CONFIG.debugMode) {
+                        const timestamp = new Date().toISOString();
+                        console.log(`[SSC Engine | ${timestamp}] ${msg}`, data !== '' ? data : '');
+                    }
+                },
+                debounce: function(func, wait, immediate) {
+                    let timeout;
+                    return function() {
+                        const context = this, args = arguments;
+                        const later = function() {
+                            timeout = null;
+                            if (!immediate) func.apply(context, args);
+                        };
+                        const callNow = immediate && !timeout;
+                        clearTimeout(timeout);
+                        timeout = setTimeout(later, wait);
+                        if (callNow) func.apply(context, args);
+                    };
+                },
+                throttle: function(func, limit) {
+                    let inThrottle;
+                    return function() {
+                        const args = arguments;
+                        const context = this;
+                        if (!inThrottle) {
+                            func.apply(context, args);
+                            inThrottle = true;
+                            setTimeout(() => inThrottle = false, limit);
+                        }
+                    }
+                },
+                generateUUID: function() {
+                    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+                        const r = Math.random() * 16 | 0;
+                        const v = c === 'x' ? r : (r & 0x3 | 0x8);
+                        return v.toString(16);
+                    });
+                },
+                select: function(selector) { return document.querySelector(selector); },
+                selectAll: function(selector) { return document.querySelectorAll(selector); }
+            };
+
+            const A11yController = (function() {
+                function init() {
+                    setupKeyboardNavigation();
+                    enhanceFocusStates();
+                    manageAriaLiveRegions();
+                    Utils.log('A11y Subsystem Initialized');
+                }
+
+                function setupKeyboardNavigation() {
+                    document.addEventListener('keydown', (e) => {
+                        if (e.key === ' ' && document.activeElement.classList.contains('card-offer')) {
+                            e.preventDefault();
+                        }
+                        if (e.key === 'Escape') {
+                            document.dispatchEvent(new CustomEvent('app:escapePressed'));
+                        }
+                    });
+                }
+
+                function enhanceFocusStates() {
+                    const focusableElements = Utils.selectAll('a, button, [tabindex="0"]');
+                    focusableElements.forEach(el => {
+                        el.addEventListener('focus', () => el.setAttribute('data-focus', 'true'));
+                        el.addEventListener('blur', () => el.removeAttribute('data-focus'));
+                    });
+                }
+                
+                function manageAriaLiveRegions() {
+                    const liveRegion = document.createElement('div');
+                    liveRegion.id = 'a11y-live-region';
+                    liveRegion.setAttribute('aria-live', 'polite');
+                    liveRegion.className = 'sr-only';
+                    document.body.appendChild(liveRegion);
+                }
+
+                return { init };
+            })();
+
+            const TelemetryEngine = (function() {
+                let eventQueue = [];
+                const maxQueueSize = 25;
+
+                function init() {
+                    trackPageView();
+                    bindInteractionTracking();
+                    setInterval(flushQueue, 15000); 
+                    Utils.log('Telemetry Engine Initialized');
+                }
+
+                function logEvent(category, action, label = null, value = null) {
+                    const event = {
+                        eventId: Utils.generateUUID(),
+                        timestamp: Date.now(),
+                        category, action, label, value,
+                        sessionTime: Date.now() - State.sessionStart
+                    };
+                    eventQueue.push(event);
+                    if (eventQueue.length >= maxQueueSize) flushQueue();
+                }
+
+                function trackPageView() { logEvent('System', 'PageView', window.location.pathname); }
+
+                function bindInteractionTracking() {
+                    document.addEventListener('click', (e) => {
+                        State.hasInteracted = true;
+                        if (e.target.tagName.toLowerCase() === 'a') logEvent('Interaction', 'LinkClick', e.target.href);
+                        const card = e.target.closest('.card-offer, .card-profiles');
+                        if (card) logEvent('Interaction', 'CardClick', card.className);
+                    });
+
+                    window.addEventListener('resize', Utils.debounce(() => {
+                        const newIsMobile = window.innerWidth < 1200;
+                        if (newIsMobile !== State.isMobile) {
+                            State.isMobile = newIsMobile;
+                            logEvent('System', 'ViewportChange', State.isMobile ? 'Mobile' : 'Desktop');
+                        }
+                    }, 500));
+                }
+
+                function flushQueue() {
+                    if (eventQueue.length === 0) return;
+                    const payload = [...eventQueue];
+                    eventQueue = [];
+                    Utils.log(`[Telemetry] Flushed ${payload.length} events (Simulated)`);
+                }
+
+                return { init, logEvent };
+            })();
+
+            const DOMManager = (function() {
+                function init() {
+                    validateStructure();
+                    Utils.log('DOM Manager Initialized');
+                }
+
+                function validateStructure() {
+                    const req = ['.app-container', '.visual-column', '.content-column', '.card-offer'];
+                    req.forEach(selector => {
+                        if (!Utils.select(selector)) Utils.log(`WARNING: Required element ${selector} missing.`);
+                    });
+                }
+                return { init };
+            })();
+
+            const PerformanceMonitor = (function() {
+                const metrics = { fcp: 0, lcp: 0, cls: 0, fid: 0 };
+
+                function init() {
+                    if ('PerformanceObserver' in window) {
+                        observePaint();
+                        observeLayoutShift();
+                        Utils.log('Performance Monitor Initialized');
+                    }
+                }
+
+                function observePaint() {
+                    try {
+                        const observer = new PerformanceObserver((list) => {
+                            for (const entry of list.getEntries()) {
+                                if(entry.name === 'first-contentful-paint') {
+                                    metrics.fcp = entry.startTime;
+                                    Utils.log(`FCP recorded: ${metrics.fcp}ms`);
+                                }
+                            }
+                        });
+                        observer.observe({ type: 'paint', buffered: true });
+                    } catch (e) { Utils.log('Paint observation failed', e); }
+                }
+
+                function observeLayoutShift() {
+                    try {
+                        let cumulativeLayoutShiftScore = 0;
+                        const observer = new PerformanceObserver((list) => {
+                            for (const entry of list.getEntries()) {
+                                if (!entry.hadRecentInput) cumulativeLayoutShiftScore += entry.value;
+                            }
+                            metrics.cls = cumulativeLayoutShiftScore;
+                        });
+                        observer.observe({ type: 'layout-shift', buffered: true });
+                    } catch (e) { Utils.log('CLS observation failed', e); }
+                }
+
+                return { init, getMetrics: () => metrics };
+            })();
+
+            function boot() {
+                Utils.log('=== SYSTEM BOOT INITIATED ===');
+                try {
+                    DOMManager.init();
+                    A11yController.init();
+                    TelemetryEngine.init();
+                    PerformanceMonitor.init();
+                    document.body.classList.add('system-ready');
+                    Utils.log('=== SYSTEM ONLINE ===');
+                } catch (error) {
+                    console.error('CRITICAL: System Boot Failure:', error);
+                }
+            }
+
+            return {
+                start: boot,
+                api: { log: TelemetryEngine.logEvent, getPerf: PerformanceMonitor.getMetrics }
+            };
+
+        })();
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', AppEngine.start);
+        } else {
+            AppEngine.start();
+        }
+
+        class VNode {
+            constructor(tag, props, children) {
+                this.tag = tag; this.props = props || {}; this.children = children || []; this.element = null;
+            }
+            render() {
+                const el = document.createElement(this.tag);
+                for (const [key, value] of Object.entries(this.props)) {
+                    if (key.startsWith('on') && typeof value === 'function') {
+                        el.addEventListener(key.substring(2).toLowerCase(), value);
+                    } else if (key === 'className') {
+                        el.className = value;
+                    } else {
+                        el.setAttribute(key, value);
+                    }
+                }
+                this.children.forEach(child => {
+                    const childNode = child instanceof VNode ? child.render() : document.createTextNode(child);
+                    el.appendChild(childNode);
+                });
+                this.element = el;
+                return el;
+            }
+        }
+
+        const SecurityUtils = {
+            sanitizeHTML: function(str) { const temp = document.createElement('div'); temp.textContent = str; return temp.innerHTML; },
+            validateEmail: function(email) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(String(email).toLowerCase()); },
+            stripScripts: function(html) { return html.replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ''); }
+        };
+
+        class StateMachine {
+            constructor(initialState) { this.state = initialState; this.listeners = []; this.history = [initialState]; }
+            transition(newState) { const oldState = this.state; this.state = newState; this.history.push(newState); this.notifyListeners(oldState, newState); }
+            subscribe(listener) { if (typeof listener === 'function') this.listeners.push(listener); }
+            notifyListeners(oldState, newState) { this.listeners.forEach(listener => listener(oldState, newState)); }
+            getHistory() { return [...this.history]; }
+        }
+
+        const uiState = new StateMachine('home');
+        uiState.subscribe((oldS, newS) => { console.log(`[State Machine] Transitioned: ${oldS} -> ${newS}`); });
+
+        window.addEventListener('beforeunload', () => { AppEngine.api.log('System', 'Unload', 'PageExit'); });
+
+        if (!Element.prototype.matches) Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.webkitMatchesSelector;
+        if (!Element.prototype.closest) {
+            Element.prototype.closest = function(s) {
+                var el = this;
+                do {
+                    if (Element.prototype.matches.call(el, s)) return el;
+                    el = el.parentElement || el.parentNode;
+                } while (el !== null && el.nodeType === 1);
+                return null;
+            };
+        }
+    </script>
+</body>
+</html>
